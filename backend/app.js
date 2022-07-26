@@ -24,7 +24,6 @@ app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.use('/carts', cartRouter);
 // app.use('/orders', orderRouter);
-
 app.use('/category', categoryRouter);
 
 module.exports = app;
