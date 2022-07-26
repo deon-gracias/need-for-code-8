@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 // fetch a product
 router.get('/:id', async (req, res) => {
     try {
-        const product = await Product.findOne({ id: req.params.id })
+        const product = await Product.findOne({ _id: req.params.id })
         if (!product) {
             res.status(404).send({ error: "Item not found" })
         }
@@ -60,6 +60,7 @@ router.patch('/items/:id', async (req, res) => {
     }
 })
 
+// delete product
 router.delete('/:id', async (req, res) => {
     try {
         const deletedProducts = await Item.findOneAndDelete({ _id: req.params.id })
