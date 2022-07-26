@@ -2,6 +2,7 @@ import { AppShell, Box, Header } from "@mantine/core"
 import CustomHeader from "../components/Nav/CustomHeader"
 import NavBar from "../components/Nav/NavBar"
 import axios from "axios"
+import Products from "../components/Products/Products"
 
 export default function Home() {
   return <AppShell
@@ -12,6 +13,6 @@ export default function Home() {
       main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
     })}
   >
-    Your Application
+    <Products />
   </AppShell>
 }
