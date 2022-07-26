@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+// var ObjectId = require('mongodb').ObjectID;
 
 const reviewSchema = new Schema(
     {
@@ -25,7 +26,7 @@ const productSchema = new Schema(
         numReviews: { type: Number, default: 0, required: true },
         reviews: [reviewSchema],
     },
-    { timestamps: true, _id: false }
+    { timestamps: true }
 )
 
 const Product = model('Product', productSchema);
