@@ -5,24 +5,25 @@ const Product = require('../models/productModel');
 
 // create the prodct
 router.post('/', async (req, res) => {
-    const category = req.query.category ? { category: req.query.category } : {};
-    const searchKeyword = req.query.searchKeyword
-        ? {
-            name: {
-                $regex: req.query.searchKeyword,
-                $options: 'i',
-            },
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if (product) {
+        product.name = req.body.name;
+        product.price = req.body.price;
+        product.image = req.body.image;
+        product.brand = req.body.brand;
+        product.category = req.body.category;
+        product.countInStock = req.body.countInStock;
+        product.description = req.body.description;
+        const updatedProduct = await product.save();
+        if (updatedProduct) {
+            return res
+                .status(200)
+                .send({ message: 'Product Updated', data: updatedProduct });
         }
-        : {};
-    const sortOrder = req.query.sortOrder
-        ? req.query.sortOrder === 'lowest'
-            ? { price: 1 }
-            : { price: -1 }
-        : { _id: -1 };
-    const products = await Product.find({ ...category, ...searchKeyword }).sort(
-        sortOrder
-    );
-    res.send(products);
+    }
+    return res.status(500).send({ message: ' Error in Updating Product.' });
+
 })
 
 // fetch a product
@@ -41,12 +42,24 @@ router.get('/:id', async (req, res) => {
 
 // fetch all products
 router.get('/', async (req, res) => {
-    try {
-        const products = await Product.find({})
-        res.status(200).send(products)
-    } catch (error) {
-        res.status(400).send(error)
-    }
+    const category = req.query.category ? { category: req.query.category } : {};
+    const searchKeyword = req.query.searchKeyword
+        ? {
+            name: {
+                $regex: req.query.searchKeyword,
+                $options: 'i',
+            },
+        }
+        : {};
+    const sortOrder = req.query.sortOrder
+        ? req.query.sortOrder === 'lowest'
+            ? { price: 1 }
+            : { price: -1 }
+        : { _id: -1 };
+    const products = await Product.find({ ...category, ...searchKeyword }).sort(
+        sortOrder
+    );
+    res.send(products);
 })
 
 // update product
@@ -82,5 +95,29 @@ router.delete('/:id', async (req, res) => {
         res.status(400).send(error)
     }
 })
+
+// review product
+router.post('/:id/reviews', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+
+    if (!product)
+        res.status(404).send({ message: 'Product Not Found' });
+
+    const review = {
+        name: req.body.name,
+        rating: Number(req.body.rating),
+        comment: req.body.comment,
+    };
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating =
+        product.reviews.reduce((a, c) => c.rating + a, 0) /
+        product.reviews.length;
+    const updatedProduct = await product.save();
+    res.status(201).send({
+        data: updatedProduct.reviews[updatedProduct.reviews.length - 1],
+        message: 'Review saved successfully.',
+    });
+});
 
 module.exports = router
