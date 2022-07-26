@@ -7,6 +7,8 @@ const cors = require('cors')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productsRouter = require('./routes/products');
+const cartRouter = require('./routes/carts');
+// const orderRouter = require('./routes/orders');
 
 const app = express();
 
@@ -19,5 +21,8 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/carts', cartRouter);
+// app.use('/orders', orderRouter);
+
 
 module.exports = app;
