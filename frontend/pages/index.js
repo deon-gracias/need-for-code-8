@@ -1,12 +1,9 @@
-import { AppShell, Header } from "@mantine/core"
+import { AppShell, Box, Header } from "@mantine/core"
 import CustomHeader from "../components/Nav/CustomHeader"
 import NavBar from "../components/Nav/NavBar"
 import axios from "axios"
 
 export default function Home() {
-  axios.get("http://localhost:5000/users").then((res) => {
-    console.log(res.data)
-  }).catch(err => console.log(err))
   return <AppShell
     padding="md"
     navbar={<NavBar />}
