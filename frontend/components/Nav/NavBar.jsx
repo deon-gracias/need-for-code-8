@@ -1,8 +1,8 @@
 import { Button, Navbar, Group } from "@mantine/core";
-import { IconHeadphones, IconDeviceMobile, IconBallFootball, IconHome2, IconGrill } from "@tabler/icons"
+import { IconHeadphones, IconDeviceMobile, IconBallFootball, IconHome2, IconGrill, IconUser } from "@tabler/icons"
+import { useEffect, useState } from "react";
 import { getToken } from "../../lib/auth";
 import NavLink from "./NavLink";
-import User from "./User"
 
 
 const links = [
@@ -14,17 +14,23 @@ const links = [
 ]
 
 export default function NavBar() {
-    const token = getToken()
+    const [token, setToken] = useState(null)
+
+    useEffect(() => {
+        setToken(getToken())
+    }, [])
 
     return <Navbar width={{ base: 250 }}>
         <Navbar.Section p="xs" grow>
             {links.map((link, index) => <NavLink key={index} color={link.color} icon={link.icon} label={link.label} />)}
         </Navbar.Section>
         <Navbar.Section p="xs" >
-            {token ? <NavLink color="red" label="Profile" /> : <Group spacing='xs'>
-                <Button component="a" href="/signin" color="red" fullWidth>Sign In</Button>
-                <Button component="a" href="/signup" fullWidth>Sign Up</Button>
-            </Group>}
+            {token ?
+                <NavLink color="red" icon={<IconUser />} label="Profile" /> :
+                <Group spacing='xs'>
+                    <Button component="a" href="/signin" color="red" fullWidth>Sign In</Button>
+                    <Button component="a" href="/signup" fullWidth>Sign Up</Button>
+                </Group>}
         </Navbar.Section>
     </Navbar >;
 }
