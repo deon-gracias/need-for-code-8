@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const createHttpError = require('http-errors');
+const createHttpError = require('http-errors')
 
 const accessTokenSecret =
     process.env.ACCESS_TOKEN_SECRET || "YOUR ACCESS TOKEN SECRET";
