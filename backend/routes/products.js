@@ -5,14 +5,24 @@ const Product = require('../models/productModel');
 
 // create the prodct
 router.post('/', async (req, res) => {
-    try {
-        const newProduct = new Product(req.body)
-        await newProduct.save()
-        res.status(201).send(newProduct)
-    } catch (error) {
-        console.log(error)
-        res.status(400).send({ message: error })
-    }
+    const category = req.query.category ? { category: req.query.category } : {};
+    const searchKeyword = req.query.searchKeyword
+        ? {
+            name: {
+                $regex: req.query.searchKeyword,
+                $options: 'i',
+            },
+        }
+        : {};
+    const sortOrder = req.query.sortOrder
+        ? req.query.sortOrder === 'lowest'
+            ? { price: 1 }
+            : { price: -1 }
+        : { _id: -1 };
+    const products = await Product.find({ ...category, ...searchKeyword }).sort(
+        sortOrder
+    );
+    res.send(products);
 })
 
 // fetch a product
