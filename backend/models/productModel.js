@@ -14,7 +14,7 @@ const reviewSchema = new Schema(
 
 const productSchema = new Schema(
     {
-        id: { type: String, required: true },
+        id: { type: String, unique: true, required: true },
         name: { type: String, required: true },
         image: { type: String },
         brand: { type: String, required: true },
