@@ -17,7 +17,7 @@ const productSchema = new Schema(
         id: { type: String, unique: true, required: true },
         name: { type: String, required: true },
         image: { type: String },
-        brand: { type: String, required: true },
+        brand: { type: String },
         price: { type: Number, default: 0, required: true },
         category: { type: String, required: true },
         countInStock: { type: Number, default: 0, required: true },
