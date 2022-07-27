@@ -41,3 +41,4 @@ frontend/.vercel
 # ===
 
 /backend/node_modules
+data.json
