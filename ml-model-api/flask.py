@@ -36,4 +36,4 @@ def data():
     # for viewing the dataset
     return data.to_json(orient='columns')
 if __name__ == "__main__":
-   app.run(debug=True,use_reloader=False)
+   app.run(debug=True,port=5001,use_reloader=False)
