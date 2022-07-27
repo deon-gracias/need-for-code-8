@@ -5,33 +5,33 @@ const Product = require('../models/productModel');
 
 // create the prodct
 router.post('/', async (req, res) => {
-    const productId = req.params.id;
-    const product = await Product.findById(productId);
-    if (product) {
-        product.name = req.body.name;
-        product.price = req.body.price;
-        product.image = req.body.image;
-        product.brand = req.body.brand;
-        product.category = req.body.category;
-        product.countInStock = req.body.countInStock;
-        product.description = req.body.description;
-        const updatedProduct = await product.save();
-        if (updatedProduct) {
-            return res
-                .status(200)
-                .send({ message: 'Product Updated', data: updatedProduct });
-        }
+    const product = new Product({
+        id: req.body.id,
+        name: req.body.name,
+        price: req.body.price,
+        image: req.body.image,
+        brand: req.body.brand,
+        category: req.body.category,
+        countInStock: req.body.countInStock,
+        description: req.body.description,
+        rating: req.body.rating,
+        numReviews: req.body.numReviews,
+    });
+    const newProduct = await product.save();
+    if (newProduct) {
+        return res
+            .status(201)
+            .send({ message: 'New Product Created', data: newProduct });
     }
-    return res.status(500).send({ message: ' Error in Updating Product.' });
-
+    return res.status(500).send({ message: ' Error in Creating Product.' });
 })
 
 // fetch a product
 router.get('/:id', async (req, res) => {
     try {
-        const product = await Product.findOne({ _id: req.params.id })
+        const product = await Product.findOne({ id: req.params.id })
         if (!product) {
-            res.status(404).send({ error: "Item not found" })
+            res.status(404).send({ error: "Product not found" })
         }
         res.status(200).send(product)
     } catch (error) {
@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
 })
 
 // update product
-router.patch('/items/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'description', 'category', 'price']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -71,13 +71,13 @@ router.patch('/items/:id', async (req, res) => {
         return res.status(400).send({ error: 'invalid updates' })
     }
     try {
-        const item = await Item.findOne({ _id: req.params.id })
-        if (!item) {
+        const product = await Product.findOne({ _id: req.params.id })
+        if (!product) {
             return res.status(404).send()
         }
-        updates.forEach((update) => item[update] = req.body[update])
-        await item.save()
-        res.send(item)
+        updates.forEach((update) => product[update] = req.body[update])
+        await product.save()
+        res.send(product)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -86,7 +86,7 @@ router.patch('/items/:id', async (req, res) => {
 // delete product
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedProducts = await Item.findOneAndDelete({ _id: req.params.id })
+        const deletedProducts = await Product.findOneAndDelete({ _id: req.params.id })
         if (!deletedProducts) {
             res.status(404).send({ error: "Product not found" })
         }
